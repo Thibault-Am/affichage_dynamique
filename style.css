@@ -1,15 +1,25 @@
 body{
-    background: #67BE4B;
+    background: url('https://www.adventistemagazine.com/wp-content/uploads/2016/01/Silver-Blur-Background-Wallpaper.jpg') no-repeat center;
+    width: auto;
+    height: auto;
+    /* overflow: hidden; */
+    background-size: cover;
+    background-attachment: fixed;
 }
 #container{
-    width:400px;
+    width:50%;
     margin:0 auto;
     margin-top:10%;
+  
+}
+.label{
+    color: #537baf;
+    font-weight: 800;
 }
 h1
 {
   font-size: 48px;
-  text-shadow: -1px -1px black, 1px 1px grey, -3px 0 4px #000;
+  text-shadow: -1px -1px #537baf, 1px 1px grey, -3px 0 4px #000;
   font-family:"Segoe print", Arial, Helvetica, sans-serif;
   color: white;
   font-weight:lighter;
@@ -18,7 +28,8 @@ h1
   box-shadow:none;  
   text-align:center;
   display:block;
-
+  margin-top: 100px;
+  margin-bottom: -125px;
 }
 /* Bordered form */
 form {
@@ -30,7 +41,6 @@ form {
 }
 #container h1{
     width: 38%;
-    margin: 0 auto;
     padding-bottom: 10px;
 }
 
@@ -46,7 +56,7 @@ input[type=text], input[type=password] {
 
 /* Set a style for all buttons */
 input[type=submit] {
-    background-color: #53af57;
+    background-color: #537baf;
     color: white;
     padding: 14px 20px;
     margin: 8px 0;
@@ -56,6 +66,6 @@ input[type=submit] {
 }
 input[type=submit]:hover {
     background-color: white;
-    color: #53af57;
-    border: 1px solid #53af57;
+    color: #537baf;
+    border: 1px solid #537baf;
 }

@@ -13,9 +13,9 @@
     <?php
         echo "
         <form action='http://localhost/Affichage_dynamique/affichage.php'>
-        <label for='login'>Token d'authentification :</label>
+        <label class='label' for='login'>Token d'authentification :</label>
         <input type='text' placeholder=\"Token\" name='token' id='token'/><br/>
-        <label for='ecran'>Nom de l'écran :</label>
+        <label class='label' for='ecran'>Nom de l'écran :</label>
         <input type=\"text\" placeholder=\"Nom de l'écran\" name='ecran' id=\"ecran\" required /><br/>
         <input type=\"submit\" class=\"pure-button pure-button-primary\" value='Confirmer'/></form>";
     ?>
