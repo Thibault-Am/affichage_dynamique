@@ -15,8 +15,6 @@
         <form action='http://localhost/Affichage_dynamique/index.php'>
         <label class='label' for='login'>Token :</label>
         <input type='text' placeholder=\"Token\" name='token' id='token'/><br/>
-        <label class='label' for='screen'>Screen Name :</label>
-        <input type=\"text\" placeholder=\"Screen name\" name='screen' id=\"screen\" required /><br/>
         <input type=\"submit\" class=\"pure-button pure-button-primary\" value='Confirmer'/></form>";
     ?>
     </div>

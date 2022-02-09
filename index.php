@@ -2,8 +2,9 @@
 <html>
 
 <head>
+
     <title>Markdown Editor</title>
-    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/marked@0.3.6"></script>
     <script src="https://unpkg.com/lodash@4.16.0"></script>
 
@@ -22,7 +23,7 @@
             height: 100vh;
         }
     </style>
-    <script async src='/cdn-cgi/bm/cv/669835187/api.js'></script>
+    <!--<script async src='/cdn-cgi/bm/cv/669835187/api.js'></script>-->
 </head>
 
 <body>
@@ -33,13 +34,8 @@
     </div>
 
     <script>
-        
-        var token = '<?php echo $_GET['token']; ?>';
+         var token = '<?php echo $_GET['token']; ?>';
         console.log(token);
-
-    </script>
-    <script>
-        import Vue from 'vue'
         new Vue({
             el: "#editor",
             data: {
@@ -48,6 +44,7 @@
                 compiled: null,
                 Next: 0,
                 Boucle: false,
+                img_src:"",
                 
             },
             methods: {
@@ -58,31 +55,47 @@
 
                 loadApi() {
 
-                    console.log
-                    fetch(`http://149.91.80.75:8055/items/Sequence?filter[Dispositif][_eq]=`.token).then((response) => {
+             
+                    fetch(`http://149.91.80.75:8055/items/Sequence?filter[Dispositif][_eq]=${token}`).then((response) => {
                         return response.json();
                     }).then((data) => {
-                        var_dump(data)
-                       /* data.data.map((value, key) => {
+                       
+                        data.data.map((value, key) => {
                             this.Boucle = value.Boucle
-                            fetch(`http://149.91.80.75:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Markdown,Ordre,Duree`).then((response) => {
+                            fetch(`http://149.91.80.75:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`).then((response) => {
                                 return response.json();
                             }).then((data) => {
                                 this.content = data.data;
+                                console.log(this.content)
                                 this.firstSlide()
 
                             });
-                        });*/
+                        });
                     });
 
                 },
                 nextSlide() {
                     for (var i = 0; i < (this.content.length); i++) {
                         if (this.content[i].Ordre === this.Next) {
-                            console.log(this.Next)
+                           // console.log(this.Next)
                             this.current = this.content[i];
                             this.Next = this.Next + 1
-                            this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
+                           // console.log(this.current.Ecrans_id.Image)
+                           // console.log(this.current.Ecrans_id.Video)
+                            if (this.current.Ecrans_id.Image != null){
+                                  this.compiled =`<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`
+                            }else if (this.current.Ecrans_id.Markdown != null){
+                                this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
+                            }else if (this.current.Ecrans_id.Video != null){
+                                  this.compiled =`
+                                  <video controls width="500" autoplay='true'>
+
+                                    <source src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Video}>
+
+                                    Sorry, your browser doesn't support embedded videos.
+                                </video>`
+
+                            }
 
                             if (this.Next > this.content.length) {
                                 if (this.Boucle == true) {
@@ -115,7 +128,21 @@
                         if (value.Ordre === 1) {
                             this.current = value
                             this.Next = 2
-                            this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
+                            if (this.current.Ecrans_id.Image != null){
+                                  this.compiled =`<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`
+                            }else if (this.current.Ecrans_id.Markdown != null){
+                                this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
+                            }else if (this.current.Ecrans_id.Video != null){
+                                  this.compiled =`
+                                  <video controls width="500" autoplay='true'>
+
+                                    <source src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Video}>
+
+                                    Sorry, your browser doesn't support embedded videos.
+                                </video>`
+
+                            }
+                           // this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
                             setTimeout(() => {
                                 this.nextSlide()
                             }, this.current.Duree * 1000);
