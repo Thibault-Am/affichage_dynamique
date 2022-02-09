@@ -33,6 +33,13 @@
     </div>
 
     <script>
+        
+        var token = '<?php echo $_GET['token']; ?>';
+        console.log(token);
+
+    </script>
+    <script>
+        import Vue from 'vue'
         new Vue({
             el: "#editor",
             data: {
@@ -41,28 +48,31 @@
                 compiled: null,
                 Next: 0,
                 Boucle: false,
-
+                
             },
             methods: {
 
                 update: _.debounce(function (e) {
                     this.input = e.target.value;
-                }, 300),
+                }, 300),// http://149.91.80.75:8055/admin/
 
                 loadApi() {
-                    fetch(`http://localhost:8055/items/Sequence?filter[Dispositif][_eq]=42836be2-8d69-4e3e-9a69-5fe9bc39aa5c&fields=id,Boucle`).then((response) => {
+
+                    console.log
+                    fetch(`http://149.91.80.75:8055/items/Sequence?filter[Dispositif][_eq]=`.token).then((response) => {
                         return response.json();
                     }).then((data) => {
-                        data.data.map((value, key) => {
+                        var_dump(data)
+                       /* data.data.map((value, key) => {
                             this.Boucle = value.Boucle
-                            fetch(`http://localhost:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Markdown,Ordre,Duree`).then((response) => {
+                            fetch(`http://149.91.80.75:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Markdown,Ordre,Duree`).then((response) => {
                                 return response.json();
                             }).then((data) => {
                                 this.content = data.data;
                                 this.firstSlide()
 
                             });
-                        });
+                        });*/
                     });
 
                 },
@@ -117,6 +127,7 @@
             },
 
             created() {
+
                 this.loadApi();
 
             },

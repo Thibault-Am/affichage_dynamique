@@ -12,28 +12,15 @@
     <div id='container'>
     <?php
         echo "
-        <form action='http://localhost/Affichage_dynamique/affichage.php'>
-        <label class='label' for='login'>Token d'authentification :</label>
+        <form action='http://localhost/Affichage_dynamique/index.php'>
+        <label class='label' for='login'>Token :</label>
         <input type='text' placeholder=\"Token\" name='token' id='token'/><br/>
-        <label class='label' for='ecran'>Nom de l'écran :</label>
-        <input type=\"text\" placeholder=\"Nom de l'écran\" name='ecran' id=\"ecran\" required /><br/>
+        <label class='label' for='screen'>Screen Name :</label>
+        <input type=\"text\" placeholder=\"Screen name\" name='screen' id=\"screen\" required /><br/>
         <input type=\"submit\" class=\"pure-button pure-button-primary\" value='Confirmer'/></form>";
     ?>
     </div>
-    <script>
-        var password = document.getElementById("password")
-        , confirm_password = document.getElementById("confirm_password");
 
-        function validatePassword(){
-        if(password.value != confirm_password.value) {
-            confirm_password.setCustomValidity("Passwords Don't Match");
-        } else {
-            confirm_password.setCustomValidity('');
-        }
-        }
-
-        password.onchange = validatePassword;
-        confirm_password.onkeyup = validatePassword;
-    </script>
+    
 </body>
 </html>

@@ -1,3 +1,3 @@
 <?php
 
-echo $_GET['token']." | ".$_GET['ecran'];
+echo $_GET['token']." | ".$_GET['screen'];
