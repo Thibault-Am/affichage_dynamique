@@ -74,7 +74,7 @@
                     fetch(`http://149.91.80.75:8055/items/Sequence?filter[Dispositif][_eq]=${token}`).then((response) => {
                         return response.json();
                     }).then((data) => {
-                       console.log(data)
+                       //console.log(data)
                         data.data.map((value, key) => {
                             this.Boucle = value.Boucle
                             fetch(`http://149.91.80.75:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`).then((response) => {
