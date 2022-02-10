@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/marked@0.3.6"></script>
     <script src="https://unpkg.com/lodash@4.16.0"></script>
-
+    <link rel="stylesheet" href="styleindex.css" media="screen" type="text/css" />
     <style>
         * {
             margin: 0;
@@ -95,7 +95,7 @@
                            // console.log(this.Next)
                             this.current = this.content[i];
                             this.Next = this.Next + 1
-                            console.log(this.current.Ecrans_id.BackgroundColor)
+                            //console.log(this.current.Ecrans_id.BackgroundColor)
                             this.compiled=`<div style='background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
                            // console.log(this.current.Ecrans_id.Image)
                            // console.log(this.current.Ecrans_id.Video)
@@ -118,7 +118,7 @@
 
                             if (this.Next > this.content.length) {
                                 if (this.Boucle == true) {
-                                    console.log('Boucle True')
+                                    //console.log('Boucle True')
                                     setTimeout(() => {
                                         this.firstSlide()
                                     }, this.current.Duree * 1000);
