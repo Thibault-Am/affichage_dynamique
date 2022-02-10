@@ -34,8 +34,23 @@
     </div>
 
     <script>
+       document.addEventListener("keydown", function(e) {
+        if (e.keyCode == 13) {
+            toggleFullScreen();
+        }
+        }, false);
+        function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+            document.exitFullscreen();
+            }
+        }
+        }
+
          var token = '<?php echo $_GET['token']; ?>';
-        console.log(token);
+        //console.log(token);
         new Vue({
             el: "#editor",
             data: {
@@ -62,7 +77,7 @@
                        
                         data.data.map((value, key) => {
                             this.Boucle = value.Boucle
-                            fetch(`http://149.91.80.75:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`).then((response) => {
+                            fetch(`http://149.91.80.75:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`).then((response) => {
                                 return response.json();
                             }).then((data) => {
                                 this.content = data.data;
@@ -80,14 +95,18 @@
                            // console.log(this.Next)
                             this.current = this.content[i];
                             this.Next = this.Next + 1
+                            console.log(this.current.Ecrans_id.BackgroundColor)
+                            this.compiled=`<div style='background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
                            // console.log(this.current.Ecrans_id.Image)
                            // console.log(this.current.Ecrans_id.Video)
                             if (this.current.Ecrans_id.Image != null){
-                                  this.compiled =`<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`
-                            }else if (this.current.Ecrans_id.Markdown != null){
-                                this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
-                            }else if (this.current.Ecrans_id.Video != null){
-                                  this.compiled =`
+                                  this.compiled +=`<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`
+                            }
+                            if (this.current.Ecrans_id.Markdown != null){
+                                this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+                            }
+                            if (this.current.Ecrans_id.Video != null){
+                                  this.compiled +=`
                                   <video controls width="500" autoplay='true'>
 
                                     <source src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Video}>
@@ -121,19 +140,22 @@
                     }
                 },
                 end() {
-                    this.compiled = "<div class='fin'>Fin De Sequence</div>";
+                    this.compiled = "</div><div class='fin'>Fin De Sequence</div>";
                 },
                 firstSlide() {
                     this.content.map((value, key) => {
                         if (value.Ordre === 1) {
                             this.current = value
                             this.Next = 2
+                            this.compiled=""
                             if (this.current.Ecrans_id.Image != null){
-                                  this.compiled =`<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`
-                            }else if (this.current.Ecrans_id.Markdown != null){
-                                this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
-                            }else if (this.current.Ecrans_id.Video != null){
-                                  this.compiled =`
+                                  this.compiled +=`<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`
+                            }
+                            if (this.current.Ecrans_id.Markdown != null){
+                                this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+                            }
+                            if (this.current.Ecrans_id.Video != null){
+                                  this.compiled +=`
                                   <video controls width="500" autoplay='true'>
 
                                     <source src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Video}>
