@@ -1,12 +1,23 @@
 <template>
   <div class="screens">
     <div v-html="compiled"></div>
+    <div class="close">
+      <div>
+        <router-link to="/TokenSelect" class="btn">
+          <i class="fa-solid fa-xmark"></i>
+        </router-link>
+        <p v-on:click="loadApi" class="btn">
+          <i class="fa-solid fa-arrow-rotate-right"></i>
+        </p>
+        <p v-on:click="fullscreen" class="btn">
+          <i class="fa-solid fa-expand"></i>
+        </p>
+      </div>
+    </div>
   </div>
 </template>
-
 <script>
 import { marked } from "marked";
-
 export default {
   data() {
     return {
@@ -17,6 +28,14 @@ export default {
       Boucle: false,
       img_src: "",
     };
+  },
+  mounted() {
+    let recaptchaScript = document.createElement("script");
+    recaptchaScript.setAttribute(
+      "src",
+      "https://kit.fontawesome.com/c0ee7c1d52.js"
+    );
+    document.head.appendChild(recaptchaScript);
   },
   methods: {
     meteo(inputVal, apiKey) {
@@ -53,6 +72,13 @@ export default {
         .catch(() => {
           alert("erreur la ville n'existe pas ");
         });
+    },
+
+    fullscreen() {
+      document.documentElement.requestFullscreen();
+    },
+    restart() {
+      document.reload();
     },
     logout() {
       this.$router.push("/TokenSelect");
@@ -370,5 +396,59 @@ ul {
   height: 100vh;
   background-size: cover;
   background-position: center;
+}
+
+.close {
+  height: 100vh;
+  width: 20vw;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 40;
+  &:hover div {
+    min-width: 20vw;
+    max-width: 20vw;
+  }
+  &:hover div .btn {
+    opacity: 1;
+  }
+  div {
+    // background: rgb(43, 41, 146);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: all 0.3s;
+    background-color: rgba(68, 63, 63, 0.822);
+    height: 100vh;
+    max-width: 0vw;
+    min-width: 0vw;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 41;
+    .btn {
+      cursor: pointer;
+      margin-top: 15px;
+      margin-bottom: 0;
+      transition: all 0.3s;
+      background: black;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      padding: 10px;
+      opacity: 0;
+      z-index: 90;
+      color: rgb(255, 251, 251);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      i {
+        font-size: 30px;
+      }
+    }
+  }
 }
 </style>
