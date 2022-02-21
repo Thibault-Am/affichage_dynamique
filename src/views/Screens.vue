@@ -51,6 +51,9 @@ export default {
     fullscreen() {
       document.documentElement.requestFullscreen();
     },
+    restart() {
+      document.reload();
+    },
     logout() {
       this.$router.push("/TokenSelect");
     },
