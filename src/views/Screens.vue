@@ -1,9 +1,31 @@
 <template>
   <div class="screens">
     <div v-html="compiled"></div>
+    <div class="close">
+      <div>
+        <router-link
+          to="/TokenSelect"
+          class="btn"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </router-link>
+        <p
+          v-on:click="loadApi"
+          class="btn"
+        >
+          <i class="fa-solid fa-arrow-rotate-right"></i>
+        </p>
+        <p
+          v-on:click="fullscreen"
+          class="btn"
+        >
+          <i class="fa-solid fa-expand"></i>
+        </p>
+      </div>
+
+    </div>
   </div>
 </template>
-
 <script>
 import { marked } from "marked";
 export default {
@@ -17,20 +39,31 @@ export default {
       img_src: "",
     };
   },
+  mounted() {
+    let recaptchaScript = document.createElement("script");
+    recaptchaScript.setAttribute(
+      "src",
+      "https://kit.fontawesome.com/c0ee7c1d52.js"
+    );
+    document.head.appendChild(recaptchaScript);
+  },
   methods: {
+    fullscreen() {
+      document.documentElement.requestFullscreen();
+    },
     logout() {
       this.$router.push("/TokenSelect");
     },
     login() {
       this.axios.patch(
-        `http://149.91.80.75:8055/items/Dispositif/${this.$store.state.token}`,
+        `https://api.interdisp.valentinbardet.dev/items/Dispositif/${this.$store.state.token}`,
         { status: "connecte" }
       );
     },
 
     loadApi() {
       fetch(
-        `http://149.91.80.75:8055/items/Sequence?filter[Dispositif][_eq]=${this.$store.state.token}`
+        `https://api.interdisp.valentinbardet.dev/items/Sequence?filter[Dispositif][_eq]=${this.$store.state.token}`
       )
         .then((response) => {
           return response.json();
@@ -38,8 +71,9 @@ export default {
         .then((data) => {
           data.data.map((value, key) => {
             this.Boucle = value.Boucle;
+            console.log(`Valeur id : .${value.id}`);
             fetch(
-              `http://149.91.80.75:8055/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Nombre_de_colonnes,Ecrans_id.Nombre_de_lignes,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Nombre_de_lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Nombre_de_lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -61,21 +95,49 @@ export default {
           this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
           // console.log(this.current.Ecrans_id.Image)
           // console.log(this.current.Ecrans_id.Video)
-          if (this.current.Ecrans_id.Image != null) {
-            this.compiled += `<img id='imgFull' src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
-          } else if (this.current.Ecrans_id.Markdown != null) {
-            this.compiled += "<section class='texte'>";
-            this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
-            this.compiled += "</section>";
-          } else if (this.current.Ecrans_id.Video != null) {
-            this.compiled += `
-                                  <video controls width="500" autoplay='true'>
 
-                                    <source src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Video}>
+          if (this.current.Ecrans_id.Type == "multimedia") {
+            this.compiled += `<div class='grille'>`;
+            if (this.current.Ecrans_id.Image != null) {
+              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
+                <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
+              </div>`;
+              // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
+            }
+            if (this.current.Ecrans_id.Markdown != null) {
+              console.log("test");
+              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes}'>`;
+              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+              this.compiled += "</section>";
+            }
+            if (this.current.Ecrans_id.Video != null) {
+              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_video}'>
+                                      <video controls width="100%" autoplay='true'>
 
-                                    Sorry, your browser doesn't support embedded videos.
-                                </video>`;
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+
+                                        Sorry, your browser doesn't support embedded videos.
+                                    </video>
+                                  </div>`;
+            }
+          } else {
+            if (this.current.Ecrans_id.Image != null) {
+              this.compiled += `<img id='imgFull' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />`;
+            } else if (this.current.Ecrans_id.Markdown != null) {
+              this.compiled += "<section class='texte'>";
+              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+              this.compiled += "</section>";
+            } else if (this.current.Ecrans_id.Video != null) {
+              this.compiled += `
+                                    <video controls width="500" autoplay='true'>
+
+                                      <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+
+                                      Sorry, your browser doesn't support embedded videos.
+                                  </video>`;
+            }
           }
+
           this.compiled += "</div>";
 
           if (this.Next > this.content.length) {
@@ -107,28 +169,56 @@ export default {
           this.current = value;
           this.Next = 2;
           this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
-          if (this.current.Ecrans_id.Image != null) {
-            this.compiled += `<div id='imgFull' style='background-position: center;width: 100vw; height: 100vh;background-size: cover;background-image: url(http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image})' /></div>`;
-            // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
-          } else if (this.current.Ecrans_id.Markdown != null) {
-            this.compiled += "<section class='texte'>";
-            this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
-            this.compiled += "</section>";
-          } else if (this.current.Ecrans_id.Video != null) {
-            this.compiled += `
-                                  <video controls width="500" autoplay='true'>
 
-                                    <source src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Video}>
+          if (this.current.Ecrans_id.Type == "multimedia") {
+            this.compiled += `<div class='grille'>`;
+            if (this.current.Ecrans_id.Image != null) {
+              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
+                <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
+              </div>`;
+              // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
+            }
+            if (this.current.Ecrans_id.Markdown != null) {
+              console.log("test");
+              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes}'>`;
+              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+              this.compiled += "</section>";
+            }
+            if (this.current.Ecrans_id.Video != null) {
+              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_video}'>
+                                      <video controls width="100%" autoplay='true'>
 
-                                    Sorry, your browser doesn't support embedded videos.
-                                </video>`;
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+
+                                        Sorry, your browser doesn't support embedded videos.
+                                    </video>
+                                  </div>
+                                  `;
+            }
+          } else {
+            if (this.current.Ecrans_id.Image != null) {
+              this.compiled += `<div id='imgFull' style='background-position: center;width: 100vw; height: 100vh;background-size: cover;background-image: url(https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image})' /></div>`;
+              // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
+            } else if (this.current.Ecrans_id.Markdown != null) {
+              this.compiled += "<section class='texte'>";
+              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+              this.compiled += "</section>";
+            } else if (this.current.Ecrans_id.Video != null) {
+              this.compiled += `
+                                      <video controls width="500" autoplay='true'>
+
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+
+                                        Sorry, your browser doesn't support embedded videos.
+                                    </video>`;
+            }
           }
-          this.compiled += "</div>";
-          // this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
-          setTimeout(() => {
-            this.nextSlide();
-          }, this.current.Duree * 1000);
         }
+        this.compiled += "</div>";
+        // this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
+        setTimeout(() => {
+          this.nextSlide();
+        }, this.current.Duree * 1000);
       });
     },
   },
@@ -138,6 +228,7 @@ export default {
   },
 };
 </script>
+
 
 <style lang="scss">
 .main {
@@ -156,10 +247,70 @@ export default {
 ul {
   margin: 0;
 }
+.grille {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
 #imgFull {
   width: 100vw;
   height: 100vh;
   background-size: cover;
   background-position: center;
+}
+
+.close {
+  height: 100vh;
+  width: 20vw;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 40;
+  &:hover div {
+    min-width: 20vw;
+    max-width: 20vw;
+  }
+  &:hover div .btn {
+    opacity: 1;
+  }
+  div {
+    // background: rgb(43, 41, 146);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: all 0.3s;
+    background-color: rgba(68, 63, 63, 0.822);
+    height: 100vh;
+    max-width: 0vw;
+    min-width: 0vw;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 41;
+    .btn {
+      cursor: pointer;
+      margin-top: 15px;
+      margin-bottom: 0;
+      transition: all 0.3s;
+      background: black;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      padding: 10px;
+      opacity: 0;
+      z-index: 90;
+      color: rgb(255, 251, 251);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      i {
+        font-size: 30px;
+      }
+    }
+  }
 }
 </style>

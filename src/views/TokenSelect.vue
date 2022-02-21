@@ -1,6 +1,11 @@
 <template>
   <div class="tokenselect">
-    <h1>Inter'Display</h1>
+    <h1>
+      <img
+        src='../assets/logo.png'
+        alt="InterDisp"
+      >
+    </h1>
     <div id="container">
       <form @submit.prevent="submit">
         <label
@@ -37,7 +42,7 @@ export default {
     notLog() {
       this.axios
         .patch(
-          `http://149.91.80.75:8055/items/Dispositif/${this.$store.state.token}`,
+          `https://api.interdisp.valentinbardet.dev/items/Dispositif/${this.$store.state.token}`,
           { status: "deconnecte" }
         )
         .then((response) => {
@@ -72,7 +77,7 @@ export default {
 }
 #container {
   min-width: 50%;
-  margin-top: 10%;
+  margin-top: 8%;
   overflow: hidden;
 }
 .label {
@@ -80,17 +85,10 @@ export default {
   font-weight: 800;
 }
 h1 {
-  font-size: 48px;
-  text-shadow: -1px -1px #537baf, 1px 1px grey, -3px 0 4px #000;
-  font-family: "Segoe print", Arial, Helvetica, sans-serif;
-  color: white;
-  font-weight: lighter;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
   box-shadow: none;
   text-align: center;
   display: block;
-  padding-top: 100px;
+  padding-top: 75px;
   margin: 0;
 }
 /* Bordered form */
@@ -107,6 +105,9 @@ form {
   width: 38%;
   padding-bottom: 10px;
   font-family: "Segoe print", Arial, Helvetica, sans-serif;
+}
+h1 img {
+  max-width: 30vw;
 }
 label {
   font-family: "Segoe print", Arial, Helvetica, sans-serif;
@@ -131,6 +132,7 @@ input[type="submit"] {
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
+  border: 1px solid #537baf;
 }
 input[type="submit"]:hover {
   background-color: white;

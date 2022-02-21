@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     verificationToken() {
-      if (this.$route.name == "TokenSelect") return;
+      if (this.$route.name == "TokenSelect");
       if (!this.$store.state.token) {
         this.$router.push("/TokenSelect");
       }
