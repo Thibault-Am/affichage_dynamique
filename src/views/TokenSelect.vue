@@ -3,10 +3,7 @@
     <h1>Inter'Display</h1>
     <div id="container">
       <form @submit.prevent="submit">
-        <label
-          class="label"
-          for="login"
-        >Token :</label>
+        <label class="label" for="login">Token :</label>
         <input
           type="text"
           placeholder="Token"
@@ -37,7 +34,7 @@ export default {
     notLog() {
       this.axios
         .patch(
-          `http://149.91.80.75:8055/items/Dispositif/${this.$store.state.token}`,
+          `https://api.interdisp.valentinbardet.dev/items/Dispositif/${this.$store.state.token}`,
           { status: "deconnecte" }
         )
         .then((response) => {
