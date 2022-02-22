@@ -27,6 +27,7 @@ export default {
       Next: 0,
       Boucle: false,
       img_src: "",
+      compteur: 1,
     };
   },
   mounted() {
@@ -49,8 +50,58 @@ export default {
 
           const div = document.createElement("div");
           div.classList.add("city");
+          var markup;
+          if (this.current.Ecrans_id.Background_color != null) {
+            markup = ` <style> body {
+              background-color:${this.current.Ecrans_id.Background_color};
+              } </style>`;
+          } else {
+            markup = ``;
+          }
 
-          const markup = `
+          markup += `
+           <style>
+                              img {
+                                display: block;
+                                height: auto;
+                              }
+
+                              .container {
+                                width: auto;
+                                height: auto;
+                              }
+                              .ajax-section .city {
+                                
+                                border-radius: 20px;
+                                background: white;
+                                color: grey;
+                                text-align:center;
+                                
+                              }
+
+                              .ajax-section .city-temp {
+                                font-size: 1rem;
+                                font-weight: bold;
+                                color: black;
+                              }
+
+                              .ajax-section .city sup {
+                                font-size: 0.5em;
+                              }
+
+                              .ajax-section .city-name sup {
+                    
+                                border-radius: 30px;
+                                color: grey;
+                                background: orange;
+                              }
+
+                              .ajax-section .city-icon {
+                                margin: auto;
+                                width: 50px;
+                                height: 50px;
+                              }
+                              </style>
                 <h2 class="city-name" data-name="${name},${sys.country}">
                   <span>${name}</span>
                   <sup>${sys.country}</sup>
@@ -62,7 +113,7 @@ export default {
                   <img class="city-icon" src="${icon}" alt="${
             weather[0]["description"]
           }">
-                  <figcaption>${weather[0]["description"]}</figcaption>
+                  
                 </figure>
               `;
 
@@ -99,10 +150,11 @@ export default {
         })
         .then((data) => {
           data.data.map((value, key) => {
+            console.log(value.id);
             this.Boucle = value.Boucle;
             //console.log(`Valeur id : .${value.id}`);
             fetch(
-              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Nombre_de_colonnes,Ecrans_id.Nombre_de_lignes,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Nombre_de_lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Nombre_de_lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -117,30 +169,29 @@ export default {
     nextSlide() {
       for (var i = 0; i < this.content.length; i++) {
         if (this.content[i].Ordre === this.Next) {
-          // console.log(this.Next)
           this.current = this.content[i];
-          this.Next = this.Next + 1;
 
           this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
-          // console.log(this.current.Ecrans_id.Image)
+          console.log(this.current.Ecrans_id.Type);
           // console.log(this.current.Ecrans_id.Video)
 
           if (this.current.Ecrans_id.Type == "multimedia") {
             this.compiled += `<div class='grille'>`;
+
             if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
+              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_image}' />
                 <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
               // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
             }
             if (this.current.Ecrans_id.Markdown != null) {
               console.log("test");
-              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes}'>`;
+              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.current.Ecrans_id.Lignes_texte}'>`;
               this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
               this.compiled += "</section>";
             }
             if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_video}'>
+              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.current.Ecrans_id.Lignes_video}'>
                                       <video controls width="100%" autoplay='true'>
 
                                         <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
@@ -169,6 +220,7 @@ export default {
           }
 
           this.compiled += "</div>";
+          this.Next = this.Next + 1;
 
           if (this.Next > this.content.length) {
             if (this.Boucle == true) {
@@ -198,24 +250,25 @@ export default {
         if (value.Ordre === 1) {
           this.current = value;
           this.Next = 2;
-          this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
+          this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'> `;
 
           if (this.current.Ecrans_id.Type == "multimedia") {
             this.compiled += `<div class='grille'>`;
+
             if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
+              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}' />
                 <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
               // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
             }
             if (this.current.Ecrans_id.Markdown != null) {
               console.log("test");
-              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes}'>`;
+              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.current.Ecrans_id.Lignes_texte} '>`;
               this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
               this.compiled += "</section>";
             }
             if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_video}'>
+              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.current.Ecrans_id.Lignes_video}'>
                                       <video controls width="100%" autoplay='true'>
 
                                         <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
@@ -225,6 +278,8 @@ export default {
                                   </div>`;
             }
           } else {
+            console.log(this.current.Ecrans_id);
+            console.log(this.current.Ecrans_id.Type);
             if (this.current.Ecrans_id.Type == "image") {
               this.compiled += `<div id='imgFull' style='background-position: center;width: 100vw; height: 100vh;background-size: cover;background-image: url(https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image})' /></div>`;
               // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
@@ -240,118 +295,10 @@ export default {
 
                                         Sorry, your browser doesn't support embedded videos.
                                     </video>`;
-            } else if (this.current.Ecrans_id.Type == "meteo") {
-              console.log("test");
-              this.compiled += `<style> :root {
-    --bg_main: #0a1f44;
-    --text_light: #fff;
-    --text_med: #53627c;
-    --text_dark: #1e2432;
-    --red: #ff1e42;
-    --darkred: #c3112d;
-    --orange: #ff8c00;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-weight: normal;
-  }
-
-
-  img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-  }
-
-
-
-  body {
-    font: 1rem/1.3 "Roboto", sans-serif;
-    background: var(--bg_main);
-    color: var(--text_dark);
-  }
-
-  .container {
-    width: 100%;
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-
-
-
-
-  /* SECTION #2
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-  .ajax-section {
-    padding: 70px 0 20px;
-  }
-
-
-
-  .ajax-section .city {
-    position: relative;
-    padding: 40px 10%;
-    border-radius: 20px;
-    background: var(--text_light);
-    color: var(--text_med);
-
-  }
-
-  .ajax-section .city::after {
-    content: '';
-    width: 90%;
-    height: 50px;
-    position: absolute;
-    bottom: -12px;
-    left: 5%;
-    z-index: -1;
-    opacity: 0.3;
-    border-radius: 20px;
-    background: var(--text_light);
-  }
-
-
-  .ajax-section .city-temp {
-    font-size: 5rem;
-    font-weight: bold;
-    margin-top: 10px;
-    color: var(--text_dark);
-  }
-
-  .ajax-section .city sup {
-    font-size: 0.5em;
-  }
-
-  .ajax-section .city-name sup {
-    padding: 0.2em 0.6em;
-    border-radius: 30px;
-    color: var(--text_light);
-    background: var(--orange);
-  }
-
-  .ajax-section .city-icon {
-    margin-top: 10px;
-    width: 100px;
-    height: 100px;
-  }</style>
-                                <div onload="${this.meteo(
-                                  "Nancy",
-                                  "4d8fb5b93d4af21d66a2948710284366"
-                                )}">
-                                  <section class="ajax-section">
-                                    <div class="container">
-                                      <div class="cities"></div>
-                                    </div>
-                                  </section>
-                                                
-                                </div>`;
             }
           }
         }
+
         this.compiled += "</div>";
         // this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
         setTimeout(() => {
@@ -388,8 +335,8 @@ ul {
 .grille {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: repeat(6, 1fr);
   grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
 }
 #imgFull {
   width: 100vw;
