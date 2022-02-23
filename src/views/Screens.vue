@@ -41,7 +41,7 @@ export default {
   methods: {
     meteo(inputVal, apiKey) {
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${apiKey}&units=metric`;
-      console.log("methode meteo");
+      // console.log("methode meteo");
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
@@ -61,10 +61,6 @@ export default {
 
           markup += `
            <style>
-                              img {
-                                display: block;
-                                height: auto;
-                              }
 
                               .container {
                                 width: auto;
@@ -150,11 +146,10 @@ export default {
         })
         .then((data) => {
           data.data.map((value, key) => {
-            console.log(value.id);
             this.Boucle = value.Boucle;
             //console.log(`Valeur id : .${value.id}`);
             fetch(
-              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -177,21 +172,36 @@ export default {
 
           if (this.current.Ecrans_id.Type == "multimedia") {
             this.compiled += `<div class='grille'>`;
-
+            if (this.current.Ecrans_id.Choix_Meteo != null) {
+              this.compteur = 2;
+              this.compiled += ` <div style=' grid-column: ${
+                this.current.Ecrans_id.Meteo_position
+              }; grid-row: 1' onload="${this.meteo(
+                this.current.Ecrans_id.Ville,
+                "4d8fb5b93d4af21d66a2948710284366"
+              )}">
+                                  <section class="ajax-section">
+                                    <div class="container">
+                                      <div class="cities"></div>
+                                    </div>
+                                  </section>
+                                                
+                                </div>`;
+            }
             if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_image}' />
+              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}' />
                 <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
               // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
             }
             if (this.current.Ecrans_id.Markdown != null) {
               console.log("test");
-              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.current.Ecrans_id.Lignes_texte}'>`;
+              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_texte}'>`;
               this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
               this.compiled += "</section>";
             }
             if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.current.Ecrans_id.Lignes_video}'>
+              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_video}'>
                                       <video controls width="100%" autoplay='true'>
 
                                         <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
@@ -254,7 +264,23 @@ export default {
 
           if (this.current.Ecrans_id.Type == "multimedia") {
             this.compiled += `<div class='grille'>`;
-
+            console.log(this.current.Ecrans_id.Ville);
+            if (this.current.Ecrans_id.Choix_Meteo != null) {
+              this.compteur = 2;
+              this.compiled += ` <div style=' grid-column: ${
+                this.current.Ecrans_id.Meteo_position
+              }; grid-row: 1' onload="${this.meteo(
+                this.current.Ecrans_id.Ville,
+                "4d8fb5b93d4af21d66a2948710284366"
+              )}">
+                                  <section class="ajax-section">
+                                    <div class="container">
+                                      <div class="cities"></div>
+                                    </div>
+                                  </section>
+                                                
+                                </div>`;
+            }
             if (this.current.Ecrans_id.Image != null) {
               this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}' />
                 <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
@@ -263,12 +289,12 @@ export default {
             }
             if (this.current.Ecrans_id.Markdown != null) {
               console.log("test");
-              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.current.Ecrans_id.Lignes_texte} '>`;
+              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_texte} '>`;
               this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
               this.compiled += "</section>";
             }
             if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.current.Ecrans_id.Lignes_video}'>
+              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_video}'>
                                       <video controls width="100%" autoplay='true'>
 
                                         <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
