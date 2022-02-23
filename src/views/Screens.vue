@@ -37,6 +37,7 @@ export default {
       Next: 0,
       Boucle: false,
       img_src: "",
+      indexTab: [],
     };
   },
   mounted() {
@@ -74,7 +75,7 @@ export default {
         .then((data) => {
           data.data.map((value, key) => {
             this.Boucle = value.Boucle;
-            console.log(`Valeur id : .${value.id}`);
+            // console.log(`Valeur id : .${value.id}`);
             fetch(
               `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Nombre_de_colonnes,Ecrans_id.Nombre_de_lignes,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Nombre_de_lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Nombre_de_lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
@@ -83,85 +84,153 @@ export default {
               })
               .then((data) => {
                 this.content = data.data;
+                this.IndexContent();
                 this.firstSlide();
               });
           });
         });
     },
-    nextSlide() {
+    IndexContent() {
       for (var i = 0; i < this.content.length; i++) {
-        if (this.content[i].Ordre === this.Next) {
-          // console.log(this.Next)
-          this.current = this.content[i];
-          this.Next = this.Next + 1;
-
-          this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
-          // console.log(this.current.Ecrans_id.Image)
-          // console.log(this.current.Ecrans_id.Video)
-
-          if (this.current.Ecrans_id.Type == "multimedia") {
-            this.compiled += `<div class='grille'>`;
-            if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
+        this.indexTab[i] = this.content[i].Ordre;
+      }
+    },
+    nextSlide(n) {
+      let i = this.indexTab.indexOf(n);
+      this.current = this.content[i];
+      console.log(this.curent + "Index : " + i);
+      this.Next = this.Next + 1;
+      this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
+      /*-------  Cas d'un contentu Multimédia   --------*/
+      if (this.current.Ecrans_id.Type == "multimedia") {
+        this.compiled += `<div class='grille'>`;
+        if (this.current.Ecrans_id.Image != null) {
+          this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
                 <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
-              // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
-            }
-            if (this.current.Ecrans_id.Markdown != null) {
-              console.log("test");
-              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes}'>`;
-              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
-              this.compiled += "</section>";
-            }
-            if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_video}'>
+        }
+        if (this.current.Ecrans_id.Markdown != null) {
+          this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes}'>`;
+          this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+          this.compiled += "</section>";
+        }
+        if (this.current.Ecrans_id.Video != null) {
+          this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_video}'>
                                       <video controls width="100%" autoplay='true'>
-
                                         <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
-
                                         Sorry, your browser doesn't support embedded videos.
                                     </video>
                                   </div>`;
-            }
-          } else {
-            if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<img id='imgFull' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />`;
-            } else if (this.current.Ecrans_id.Markdown != null) {
-              this.compiled += "<section class='texte'>";
-              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
-              this.compiled += "</section>";
-            } else if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `
+        }
+      } else {
+        if (this.current.Ecrans_id.Image != null) {
+          this.compiled += `<img id='imgFull' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />`;
+        }
+        if (this.current.Ecrans_id.Markdown != null) {
+          this.compiled += "<section class='texte'>";
+          this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+          this.compiled += "</section>";
+        }
+        if (this.current.Ecrans_id.Video != null) {
+          this.compiled += `
                                     <video controls width="500" autoplay='true'>
-
                                       <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
-
                                       Sorry, your browser doesn't support embedded videos.
                                   </video>`;
-            }
-          }
-
-          this.compiled += "</div>";
-
-          if (this.Next > this.content.length) {
-            if (this.Boucle == true) {
-              setTimeout(() => {
-                this.firstSlide();
-              }, this.current.Duree * 1000);
-            } else {
-              setTimeout(() => {
-                this.end();
-              }, this.current.Duree * 1000);
-            }
-          } else {
-            setTimeout(() => {
-              this.nextSlide();
-            }, this.current.Duree * 1000);
-          }
-
-          break;
         }
       }
+      this.compiled += "</div>";
+      console.log("Next: " + this.Next + " Taille: " + this.content.length);
+      if (this.Next > this.content.length) {
+        if (this.Boucle == true) {
+          console.log("   ");
+          console.log("Retour a la premiere sequence");
+          setTimeout(() => {
+            this.firstSlide();
+            console.log("Attente de " + this.current.Duree + "s");
+          }, this.current.Duree * 1000);
+        } else {
+          setTimeout(() => {
+            this.end();
+            console.log("Attente de " + this.current.Duree + "s");
+          }, this.current.Duree * 1000);
+        }
+      } else {
+        setTimeout(() => {
+          this.nextSlide(this.Next);
+          console.log("Attente de " + this.current.Duree + "s");
+        }, this.current.Duree * 1000);
+      }
+
+      // for (var i = 0; i < this.content.length; i++) {
+      //   if (this.content[i].Ordre === this.Next) {
+      //     console.log("suivant" + this.Next);
+      //     this.current = this.content[i];
+      //     this.Next = this.Next + 1;
+      //     this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
+      //     /*-------  Cas d'un contentu Multimédia   --------*/
+      //     if (this.current.Ecrans_id.Type == "multimedia") {
+      //       this.compiled += `<div class='grille'>`;
+      //       if (this.current.Ecrans_id.Image != null) {
+      //         this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
+      //           <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
+      //         </div>`;
+      //       }
+      //       if (this.current.Ecrans_id.Markdown != null) {
+      //         console.log("test");
+      //         this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes}'>`;
+      //         this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+      //         this.compiled += "</section>";
+      //       }
+      //       if (this.current.Ecrans_id.Video != null) {
+      //         this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_video}'>
+      //                                 <video controls width="100%" autoplay='true'>
+      //                                   <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+      //                                   Sorry, your browser doesn't support embedded videos.
+      //                               </video>
+      //                             </div>`;
+      //       }
+      //     } else {
+      //       if (this.current.Ecrans_id.Image != null) {
+      //         this.compiled += `<img id='imgFull' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />`;
+      //       }
+      //       if (this.current.Ecrans_id.Markdown != null) {
+      //         this.compiled += "<section class='texte'>";
+      //         this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+      //         this.compiled += "</section>";
+      //       }
+      //       if (this.current.Ecrans_id.Video != null) {
+      //         this.compiled += `
+      //                               <video controls width="500" autoplay='true'>
+      //                                 <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+      //                                 Sorry, your browser doesn't support embedded videos.
+      //                             </video>`;
+      //       }
+      //     }
+      //     this.compiled += "</div>";
+      //     console.log("Next: " + this.Next + " Taille: " + this.content.length);
+      //     if (this.Next > this.content.length) {
+      //       if (this.Boucle == true) {
+      //         console.log("Boucle True");
+      //         setTimeout(() => {
+      //           this.firstSlide();
+      //         }, this.current.Duree * 1000);
+      //         console.log("break");
+      //         break;
+      //       } else {
+      //         setTimeout(() => {
+      //           this.end();
+      //         }, this.current.Duree * 1000);
+      //         break;
+      //       }
+      //     } else {
+      //       setTimeout(() => {
+      //         this.nextSlide();
+      //       }, this.current.Duree * 1000);
+      //       break;
+      //     }
+      //   }
+      // }
     },
     end() {
       this.compiled = "<div class='fin'>Fin De Sequence</div>";
@@ -173,13 +242,14 @@ export default {
           this.Next = 2;
           this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
 
+          /*-------  Cas d'un contentu Multimédia   --------*/
+
           if (this.current.Ecrans_id.Type == "multimedia") {
             this.compiled += `<div class='grille'>`;
             if (this.current.Ecrans_id.Image != null) {
               this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-raw: span ${this.current.Ecrans_id.Nombre_de_lignes_image}' />
                 <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
-              // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
             }
             if (this.current.Ecrans_id.Markdown != null) {
               console.log("test");
@@ -198,36 +268,47 @@ export default {
                                   </div>
                                   `;
             }
-          } else {
-            if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<div id='imgFull' style='background-position: center;width: 100vw; height: 100vh;background-size: cover;background-image: url(https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image})' /></div>`;
-              // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
-            } else if (this.current.Ecrans_id.Markdown != null) {
-              this.compiled += "<section class='texte'>";
-              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
-              this.compiled += "</section>";
-            } else if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `
-                                      <video controls width="500" autoplay='true'>
-
-                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
-
-                                        Sorry, your browser doesn't support embedded videos.
-                                    </video>`;
-            }
           }
+
+          /*-------  Cas d'un contentu Image   --------*/
+
+          if (this.current.Ecrans_id.Type == "image") {
+            this.compiled += `<div id='imgFull' style='background-position: center;width: 100vw; height: 100vh;background-size: cover;background-image: url(https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image})' /></div>`;
+          }
+
+          /*-------  Cas d'un contentu Texte   --------*/
+
+          if (this.current.Ecrans_id.Type == "texte") {
+            this.compiled += "<section class='texte'>";
+            this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+            this.compiled += "</section>";
+          }
+
+          /*-------  Cas d'un contentu Video   --------*/
+
+          if (this.current.Ecrans_id.Type == "video") {
+            this.compiled += `<video controls width="500" autoplay='true'>
+                                <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+                                Sorry, your browser doesn't support embedded videos.
+                              </video>`;
+          }
+          this.compiled += "</div>";
+          console.log("Slide 1|Next 2");
+          setTimeout(() => {
+            this.nextSlide(this.Next);
+            console.log("Attente de " + this.current.Duree + "s");
+          }, this.current.Duree * 1000);
         }
-        this.compiled += "</div>";
-        // this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
-        setTimeout(() => {
-          this.nextSlide();
-        }, this.current.Duree * 1000);
       });
     },
   },
   created() {
     this.loadApi();
     this.login();
+    console.log("avant");
+
+    // var_dump(this.indexTab);
+    // console.log("apres");
   },
 };
 </script>
