@@ -150,7 +150,7 @@ export default {
             this.Boucle = value.Boucle;
             //console.log(`Valeur id : .${value.id}`);
             fetch(
-              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Nombre_de_lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -191,6 +191,21 @@ export default {
                                   </section>
                                                 
                                 </div>`;
+        }
+        if (this.current.Ecrans_id.videoYoutube != null) {
+          this.compiled += `
+                <div style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_videoYoutube}'  class="youtube">
+                  <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/${this.current.Ecrans_id.videoYoutube}?autoplay=1"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; ; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+              `;
         }
         if (this.current.Ecrans_id.Image != null) {
           this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}' />
@@ -285,6 +300,21 @@ export default {
                                   </section>
                                                 
                                 </div>`;
+            }
+            if (this.current.Ecrans_id.videoYoutube != null) {
+              this.compiled += `
+                <div style=' grid-column:span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_videoYoutube}'  class="youtube">
+                  <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/${this.current.Ecrans_id.videoYoutube}?autoplay=1"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; ; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+              `;
             }
             if (this.current.Ecrans_id.Image != null) {
               this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_image}' />
