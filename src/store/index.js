@@ -8,7 +8,7 @@ const vuexLocal = new VuexPersistence({
 export default createStore({
     plugins: [new VuexPersistence().plugin],
     state: {
-        token: "",
+        token: "42836be2-8d69-4e3e-9a69-5fe9bc39aa5c",
     },
     mutations: {
         setToken(state, token) {
