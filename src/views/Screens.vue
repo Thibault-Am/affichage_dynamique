@@ -195,7 +195,7 @@ export default {
               // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
             }
             if (this.current.Ecrans_id.Markdown != null) {
-              console.log("test");
+              //console.log("test");
               this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_texte}'>`;
               this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
               this.compiled += "</section>";
@@ -230,9 +230,8 @@ export default {
           }
 
           this.compiled += "</div>";
-          this.Next = this.Next + 1;
 
-          if (this.Next > this.content.length) {
+          if (this.Next >= this.content.length) {
             if (this.Boucle == true) {
               setTimeout(() => {
                 this.firstSlide();
@@ -243,12 +242,12 @@ export default {
               }, this.current.Duree * 1000);
             }
           } else {
+            console.log(this.current.Duree);
             setTimeout(() => {
+              this.Next = this.Next + 1;
               this.nextSlide();
             }, this.current.Duree * 1000);
           }
-
-          break;
         }
       }
     },
@@ -327,6 +326,7 @@ export default {
 
         this.compiled += "</div>";
         // this.compiled = marked.parse(this.current.Ecrans_id.Markdown);
+
         setTimeout(() => {
           this.nextSlide();
         }, this.current.Duree * 1000);
