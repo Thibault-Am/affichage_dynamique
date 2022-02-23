@@ -38,6 +38,10 @@ export default {
       "https://kit.fontawesome.com/c0ee7c1d52.js"
     );
     document.head.appendChild(recaptchaScript);
+    let widgets = document.createElement("script");
+    widgets.setAttribute("charset", "UTF-8");
+    widgets.setAttribute("src", "https://platform.twitter.com/widgets.js");
+    document.head.appendChild(widgets);
   },
   methods: {
     meteo(inputVal, apiKey) {
@@ -150,7 +154,7 @@ export default {
             this.Boucle = value.Boucle;
             //console.log(`Valeur id : .${value.id}`);
             fetch(
-              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Nombre_de_lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Lignes_twitter,Ecrans_id.widget_twitter,Ecrans_id.Nombre_de_colonnes_twitter,Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -194,7 +198,7 @@ export default {
         }
         if (this.current.Ecrans_id.videoYoutube != null) {
           this.compiled += `
-                <div style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_videoYoutube}'  class="youtube">
+                <div style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.compteur}/${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
                   <iframe
                     width="560"
                     height="315"
@@ -227,6 +231,12 @@ export default {
                                     </video>
                                   </div>
                                   `;
+        }
+        if (this.current.Ecrans_id.widget_twitter != null) {
+          this.compiled += ` <div class="container" style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_twitter}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_twitter}'>
+            
+            <a class="twitter-timeline" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a>  
+          </div> `;
         }
       } else {
         if (this.current.Ecrans_id.Type == "image") {
@@ -335,28 +345,34 @@ export default {
                                   </div>
                                   `;
             }
-          }
-          /*-------  Cas d'un contentu Image   --------*/
-          if (this.current.Ecrans_id.Type == "image") {
-            this.compiled += `<div id='imgFull' style='background-position: center;width: 100vw; height: 100vh;background-size: cover;background-image: url(https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image})' /></div>`;
-          }
-          /*-------  Cas d'un contentu Texte   --------*/
-          if (this.current.Ecrans_id.Type == "texte") {
-            this.compiled += "<section class='texte'>";
-            this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
-            this.compiled += "</section>";
-          }
-          /*-------  Cas d'un contentu Video   --------*/
-          if (this.current.Ecrans_id.Type == "video") {
-            this.compiled += `<video controls width="500" autoplay='true'>
+            if (this.current.Ecrans_id.widget_twitter != null) {
+              this.compiled += ` <div class="container" style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_twitter}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_twitter}'>
+            
+            <a class="twitter-timeline" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a>  
+          </div> `;
+            }
+          } else {
+            /*-------  Cas d'un contentu Image   --------*/
+            if (this.current.Ecrans_id.Type == "image") {
+              this.compiled += `<div id='imgFull' style='background-position: center;width: 100vw; height: 100vh;background-size: cover;background-image: url(https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image})' /></div>`;
+            }
+            /*-------  Cas d'un contentu Texte   --------*/
+            if (this.current.Ecrans_id.Type == "texte") {
+              this.compiled += "<section class='texte'>";
+              this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
+              this.compiled += "</section>";
+            }
+            /*-------  Cas d'un contentu Video   --------*/
+            if (this.current.Ecrans_id.Type == "video") {
+              this.compiled += `<video controls width="500" autoplay='true'>
                                 <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
                                 Sorry, your browser doesn't support embedded videos.
                               </video>`;
-          }
-          /* ------ Cas d'un contenu video youtube -------*/
+            }
+            /* ------ Cas d'un contenu video youtube -------*/
 
-          if (this.current.Ecrans_id.videoYoutube != null) {
-            this.compiled += `
+            if (this.current.Ecrans_id.videoYoutube != null) {
+              this.compiled += `
                 <div class="youtube">
                   <iframe
                     width="560"
@@ -369,7 +385,9 @@ export default {
                   ></iframe>
                 </div>
               `;
+            }
           }
+
           this.compiled += "</div>";
           setTimeout(() => {
             this.nextSlide(this.Next);
