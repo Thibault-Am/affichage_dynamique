@@ -1,6 +1,6 @@
 <template>
   <div class="screens">
-    <div v-html="compiled"></div>
+    <v-runtime-template :template="compiled"></v-runtime-template>
     <div class="close">
       <div>
         <router-link to="/TokenSelect" class="btn">
@@ -18,9 +18,17 @@
 </template>
 <script>
 import { marked } from "marked";
+import VRuntimeTemplate from "vue3-runtime-template";
+const date = new Date();
 export default {
   data() {
     return {
+      dateTime: {
+        hours: date.getHours(),
+        minutes: date.getMinutes(),
+        seconds: date.getSeconds(),
+      },
+      timer: undefined,
       content: [],
       current: [""],
       compiled: null,
@@ -31,6 +39,9 @@ export default {
       indexTab: [],
     };
   },
+  components: {
+    VRuntimeTemplate,
+  },
   mounted() {
     let recaptchaScript = document.createElement("script");
     recaptchaScript.setAttribute(
@@ -38,12 +49,16 @@ export default {
       "https://kit.fontawesome.com/c0ee7c1d52.js"
     );
     document.head.appendChild(recaptchaScript);
-    let widgets = document.createElement("script");
-    widgets.setAttribute("charset", "UTF-8");
-    widgets.setAttribute("src", "https://platform.twitter.com/widgets.js");
-    document.head.appendChild(widgets);
   },
   methods: {
+    setDateTime() {
+      const date = new Date();
+      this.dateTime = {
+        hours: date.getHours(),
+        minutes: date.getMinutes(),
+        seconds: date.getSeconds(),
+      };
+    },
     meteo(inputVal, apiKey) {
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${apiKey}&units=metric`;
       // console.log("methode meteo");
@@ -154,7 +169,7 @@ export default {
             this.Boucle = value.Boucle;
             //console.log(`Valeur id : .${value.id}`);
             fetch(
-              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Lignes_twitter,Ecrans_id.widget_twitter,Ecrans_id.Nombre_de_colonnes_twitter,Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Choix_Horloge,Ecrans_id.Lignes_twitter,Ecrans_id.widget_twitter,Ecrans_id.Nombre_de_colonnes_twitter,Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -180,7 +195,7 @@ export default {
       /*-------  Cas d'un contentu Multimédia   --------*/
       if (this.current.Ecrans_id.Type == "multimedia") {
         this.compiled += `<div class='grille'>`;
-        if (this.current.Ecrans_id.Choix_Meteo != null) {
+        if (this.current.Ecrans_id.Choix_Meteo == true) {
           this.compteur = 2;
           this.compiled += ` <div style=' grid-column: ${
             this.current.Ecrans_id.Meteo_position
@@ -232,11 +247,9 @@ export default {
                                   </div>
                                   `;
         }
-        if (this.current.Ecrans_id.widget_twitter != null) {
-          this.compiled += ` <div class="container" style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_twitter}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_twitter}'>
-            
-            <a class="twitter-timeline" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a>  
-          </div> `;
+        if (this.current.Ecrans_id.Choix_Horloge != null) {
+          this.compiled += `
+               <div ><p id="horloge">{{ dateTime.hours }}:{{ dateTime.minutes }}:{{ dateTime.seconds }}</p></div></div>`;
         }
       } else {
         if (this.current.Ecrans_id.Type == "image") {
@@ -264,6 +277,8 @@ export default {
                     allowfullscreen
                   ></iframe>
                 </div>`;
+        } else if (this.current.Ecrans_id.widget_twitter == true) {
+          this.compiled += `<div class="container"> <a class="twitter-timeline" data-width="600" data-height="500" data-theme="light" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a> </div>`;
         }
       }
       this.compiled += "</div>";
@@ -295,7 +310,7 @@ export default {
           /*-------  Cas d'un contentu Multimédia   --------*/
           if (this.current.Ecrans_id.Type == "multimedia") {
             this.compiled += `<div class='grille'>`;
-            if (this.current.Ecrans_id.Choix_Meteo != null) {
+            if (this.current.Ecrans_id.Choix_Meteo == true) {
               this.compteur = 2;
               this.compiled += ` <div style=' grid-column: ${
                 this.current.Ecrans_id.Meteo_position
@@ -345,12 +360,6 @@ export default {
                                   </div>
                                   `;
             }
-            if (this.current.Ecrans_id.widget_twitter != null) {
-              this.compiled += ` <div class="container" style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_twitter}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_twitter}'>
-            
-            <a class="twitter-timeline" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a>  
-          </div> `;
-            }
           } else {
             /*-------  Cas d'un contentu Image   --------*/
             if (this.current.Ecrans_id.Type == "image") {
@@ -386,6 +395,17 @@ export default {
                 </div>
               `;
             }
+            if (this.current.Ecrans_id.widget_twitter == true) {
+              let widgets = document.createElement("script");
+              widgets.setAttribute("charset", "UTF-8");
+              widgets.setAttribute(
+                "src",
+                "https://platform.twitter.com/widgets.js"
+              );
+
+              document.head.appendChild(widgets);
+              this.compiled += `<div class="container"> <a class="twitter-timeline" data-width="600" data-height="500" data-theme="light" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a> </div> `;
+            }
           }
 
           this.compiled += "</div>";
@@ -396,10 +416,16 @@ export default {
       });
     },
   },
-
+  beforeMount() {
+    this.timer = setInterval(this.setDateTime, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.timer);
+  },
   created() {
     this.loadApi();
     this.login();
+
     console.log("avant");
 
     // var_dump(this.indexTab);
