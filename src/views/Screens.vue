@@ -170,7 +170,8 @@ export default {
             this.Boucle = value.Boucle;
             //console.log(`Valeur id : .${value.id}`);
             fetch(
-              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Choix_Image,Ecrans_id.Choix_Horloge,Ecrans_id.Horloge_position,Ecrans_id.Lignes_twitter,Ecrans_id.widget_twitter,Ecrans_id.Nombre_de_colonnes_twitter,Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Colonne_de_depart,Ecrans_id.Lignes_texte_depart,Ecrans_id.Colonnes_video_depart,Ecrans_id.Lignes_video_depart,Ecrans_id.Colonnes_image_depart,Ecrans_id.Lignes_image_depart,Ecrans_id.Colonnes_videoYoutube_depart,Ecrans_id.Lignes_videoYoutube_depart
+              ,Ecrans_id.Choix_Image,Ecrans_id.Choix_Horloge,Ecrans_id.Horloge_position,Ecrans_id.widget_twitter,Ecrans_id.Nombre_de_colonnes_twitter,Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Nombres_Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -214,7 +215,7 @@ export default {
         }
         if (this.current.Ecrans_id.videoYoutube != null) {
           this.compiled += `
-                <div style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.compteur}/${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
+                <div style=' grid-column: ${this.current.Ecrans_id.Colonnes_videoYoutube_depart}/${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.current.Ecrans_id.Lignes_videoYoutube_depart}/${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
                   <iframe
                     width="560"
                     height="315"
@@ -228,22 +229,21 @@ export default {
               `;
         }
         if (this.current.Ecrans_id.Image != null) {
-          console.log("frip");
-          this.compiled += `<div  style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}'>
+          this.compiled += `<div  style=' grid-column: ${this.current.Ecrans_id.Colonnes_image_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_images_depart}/ span ${this.current.Ecrans_id.Lignes_image}'>
                 <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
           // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
         }
         if (this.current.Ecrans_id.Markdown != null) {
           //console.log("test");
-          this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_texte}'>`;
+          this.compiled += `<section class='texte' style=' grid-column: ${this.current.Ecrans_id.Colonne_de_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.current.Ecrans_id.Lignes_texte_depart}/ span ${this.current.Ecrans_id.Nombres_Lignes_texte}'>`;
           this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
           this.compiled += "</section>";
         }
         if (this.current.Ecrans_id.Video != null) {
-          this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_video}'>
+          this.compiled += `  <div style='grid-column: ${this.current.Ecrans_id.Colonnes_video_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row:${this.current.Ecrans_id.Lignes_video_depart}/ span ${this.current.Ecrans_id.Lignes_video}'>
                                       <video controls width="100%" autoplay='true'>
-                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}/>
                                         Sorry, your browser doesn't support embedded videos.
                                     </video>
                                   </div>
@@ -308,8 +308,17 @@ export default {
           /*-------  Cas d'un contentu Multimédia   --------*/
           this.compiled += `<div class='grille'>`;
           if (this.current.Ecrans_id.Type == "multimedia") {
+            if (this.current.Ecrans_id.Video != null) {
+              console.log(this.current.Ecrans_id.Video);
+              this.compiled += `  <div style='grid-column: ${this.current.Ecrans_id.Colonnes_video_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row:${this.current.Ecrans_id.Lignes_video_depart}/ span ${this.current.Ecrans_id.Lignes_video}'>
+                                      <video controls width="100%" autoplay='true'>
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video} />
+                                        Sorry, your browser doesn't support embedded videos.
+                                    </video>
+                                  </div>
+                                  `;
+            }
             if (this.current.Ecrans_id.Choix_Meteo == true) {
-              this.compteur = 2;
               this.compiled += ` <div style=' grid-column: ${
                 this.current.Ecrans_id.Meteo_position
               }; grid-row: 1' onload="${this.meteo(
@@ -326,7 +335,7 @@ export default {
             }
             if (this.current.Ecrans_id.videoYoutube != null) {
               this.compiled += `
-                <div style=' grid-column:span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_videoYoutube}'  class="youtube">
+                <div style=' grid-column: ${this.current.Ecrans_id.Colonnes_videoYoutube_depart}/${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.current.Ecrans_id.Lignes_videoYoutube_depart}/${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
                   <iframe
                     width="560"
                     height="315"
@@ -340,25 +349,17 @@ export default {
               `;
             }
             if (this.current.Ecrans_id.Image != null) {
-              console.log(this.current.Ecrans_id.Image);
-              this.compiled += `<div  style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_image}' >
+              this.compiled += `<div  style='grid-column: ${this.current.Ecrans_id.Colonnes_image_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_images_depart}/ span ${this.current.Ecrans_id.Lignes_image}' >
                 <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />
               </div>`;
             }
             if (this.current.Ecrans_id.Markdown != null) {
-              this.compiled += `<section class='texte' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes}'>`;
+              console.log(this.current.Ecrans_id.Colonne_de_depart);
+              this.compiled += `<section class='texte' style=' grid-column: ${this.current.Ecrans_id.Colonne_de_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes}; grid-row: ${this.current.Ecrans_id.Lignes_texte_depart}/ span ${this.current.Ecrans_id.Nombres_Lignes_texte}'>`;
               this.compiled += marked.parse(this.current.Ecrans_id.Markdown);
               this.compiled += "</section>";
             }
-            if (this.current.Ecrans_id.Video != null) {
-              this.compiled += `  <div style='grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_video}'>
-                                      <video controls width="100%" autoplay='true'>
-                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
-                                        Sorry, your browser doesn't support embedded videos.
-                                    </video>
-                                  </div>
-                                  `;
-            }
+
             if (this.current.Ecrans_id.Choix_Horloge != null) {
               this.compiled += `
               <div style='grid-column: ${this.current.Ecrans_id.Horloge_position}; grid-row: 1'><p id="horloge">{{ dateTime.hours }}:{{ dateTime.minutes }}:{{ dateTime.seconds }}</p></div></div>`;
