@@ -228,7 +228,8 @@ export default {
               `;
         }
         if (this.current.Ecrans_id.Image != null) {
-          this.compiled += `<div  style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}' />
+          console.log("frip");
+          this.compiled += `<div  style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}'>
                 <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
           // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
