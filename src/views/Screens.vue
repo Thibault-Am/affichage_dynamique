@@ -171,7 +171,7 @@ export default {
             //console.log(`Valeur id : .${value.id}`);
             fetch(
               `https://api.interdisp.valentinbardet.dev/items/Sequence_Ecrans?filter[Sequence_id][_eq]=${value.id}&fields=Ecrans_id.Colonne_de_depart,Ecrans_id.Lignes_texte_depart,Ecrans_id.Colonnes_video_depart,Ecrans_id.Lignes_video_depart,Ecrans_id.Colonnes_image_depart,Ecrans_id.Lignes_image_depart,Ecrans_id.Colonnes_videoYoutube_depart,Ecrans_id.Lignes_videoYoutube_depart
-              ,Ecrans_id.Choix_Image,Ecrans_id.Choix_Horloge,Ecrans_id.Horloge_position,Ecrans_id.widget_twitter,Ecrans_id.Nombre_de_colonnes_twitter,Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Nombres_Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
+              ,Ecrans_id.Choix_Image,Ecrans_id.Choix_Horloge,Ecrans_id.Horloge_position,Ecrans_id.User_Twitter,Ecrans_id.Nombre_de_colonnes_twitter,Ecrans_id.Nombre_de_colonnes_videoYoutube,Ecrans_id.Lignes_videoYoutube,Ecrans_id.videoYoutube,Ecrans_id.Choix_videoYoutube,Ecrans_id.Choix_Meteo,Ecrans_id.Meteo_position,Ecrans_id.Ville,Ecrans_id.Background_color,Ecrans_id.Nombre_de_colonnes,Ecrans_id.Nombres_Lignes_texte,Ecrans_id.Nombre_de_colonnes_video,Ecrans_id.Lignes_video,Ecrans_id.Nombre_de_colonnes_image,Ecrans_id.Lignes_image,Ecrans_id.Type,Ecrans_id.FontColor,Ecrans_id.BackgroundColor,Ecrans_id.Markdown,Ecrans_id.Image,Ecrans_id.Video,Ordre,Duree`
             )
               .then((response) => {
                 return response.json();
@@ -400,7 +400,8 @@ export default {
                 </div>
               `;
             }
-            if (this.current.Ecrans_id.widget_twitter == true) {
+            if (this.current.Ecrans_id.User_Twitter != null) {
+              console.log(this.current.Ecrans_id.User_Twitter);
               let widgets = document.createElement("script");
               widgets.setAttribute("charset", "UTF-8");
               widgets.setAttribute(
@@ -409,7 +410,9 @@ export default {
               );
 
               document.head.appendChild(widgets);
-              this.compiled += `<div class="container"> <a class="twitter-timeline" data-width="600" data-height="500" data-theme="light" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a> </div> `;
+              this.compiled += `<h1 class="widget_twitter_h1">Tweets by ${this.current.Ecrans_id.User_Twitter}</h1>
+              <div class="widget_twitter"> <a class="twitter-timeline" data-width="550" data-height="450" data-theme="light" href="https://twitter.com/${this.current.Ecrans_id.User_Twitter}" data-link-color="#E95F28" data-tweet-limit="1">Tweets by ${this.current.Ecrans_id.User_Twitter}</a> </div> ;
+           `;
             }
           }
 
@@ -440,6 +443,16 @@ export default {
 <style lang="scss">
 video {
   width: 100%;
+}
+.widget_twitter_h1 {
+  grid-column: 3/5;
+  grid-row: 1;
+  text-align: center;
+}
+.widget_twitter {
+  grid-column: 3/5;
+  grid-row: 2;
+  text-align: center;
 }
 .imgG {
   width: 100%;
