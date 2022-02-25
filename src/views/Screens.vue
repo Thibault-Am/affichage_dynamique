@@ -242,8 +242,8 @@ export default {
         }
         if (this.current.Ecrans_id.Video != null) {
           this.compiled += `  <div style='grid-column: ${this.current.Ecrans_id.Colonnes_video_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row:${this.current.Ecrans_id.Lignes_video_depart}/ span ${this.current.Ecrans_id.Lignes_video}'>
-                                      <video controls width="100%" autoplay='true'>
-                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}/>
+                                      <video controls  autoplay='true'>
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}'>
                                         Sorry, your browser doesn't support embedded videos.
                                     </video>
                                   </div>
@@ -311,8 +311,9 @@ export default {
             if (this.current.Ecrans_id.Video != null) {
               console.log(this.current.Ecrans_id.Video);
               this.compiled += `  <div style='grid-column: ${this.current.Ecrans_id.Colonnes_video_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row:${this.current.Ecrans_id.Lignes_video_depart}/ span ${this.current.Ecrans_id.Lignes_video}'>
+
                                       <video controls width="100%" autoplay='true'>
-                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video} />
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}'>
                                         Sorry, your browser doesn't support embedded videos.
                                     </video>
                                   </div>
@@ -437,6 +438,9 @@ export default {
 
 
 <style lang="scss">
+video {
+  width: 100%;
+}
 .imgG {
   width: 100%;
 }
