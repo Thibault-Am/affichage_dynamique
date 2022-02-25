@@ -275,8 +275,19 @@ export default {
                     allowfullscreen
                   ></iframe>
                 </div>`;
-        } else if (this.current.Ecrans_id.widget_twitter == true) {
-          this.compiled += `<div class="container"> <a class="twitter-timeline" data-width="600" data-height="500" data-theme="light" href="https://twitter.com/iutCharlemagne?ref_src=twsrc%5Etfw" data-link-color="#E95F28" data-tweet-limit="1">Tweets by iutCharlemagne</a> </div>`;
+        } else if (this.current.Ecrans_id.User_Twitter != null) {
+          console.log(this.current.Ecrans_id.User_Twitter);
+          let widgets = document.createElement("script");
+          widgets.setAttribute("charset", "UTF-8");
+          widgets.setAttribute(
+            "src",
+            "https://platform.twitter.com/widgets.js"
+          );
+
+          document.head.appendChild(widgets);
+          this.compiled += `<h1 class="widget_twitter_h1">Tweets by ${this.current.Ecrans_id.User_Twitter}</h1>
+              <div class="widget_twitter"> <a class="twitter-timeline" data-width="550" data-height="450" data-theme="light" href="https://twitter.com/${this.current.Ecrans_id.User_Twitter}" data-link-color="#E95F28" data-tweet-limit="1">Tweets by ${this.current.Ecrans_id.User_Twitter}</a> </div> 
+           `;
         }
       }
       this.compiled += "</div>";
@@ -411,7 +422,7 @@ export default {
 
               document.head.appendChild(widgets);
               this.compiled += `<h1 class="widget_twitter_h1">Tweets by ${this.current.Ecrans_id.User_Twitter}</h1>
-              <div class="widget_twitter"> <a class="twitter-timeline" data-width="550" data-height="450" data-theme="light" href="https://twitter.com/${this.current.Ecrans_id.User_Twitter}" data-link-color="#E95F28" data-tweet-limit="1">Tweets by ${this.current.Ecrans_id.User_Twitter}</a> </div> ;
+              <div class="widget_twitter"> <a class="twitter-timeline" data-width="550" data-height="450" data-theme="light" href="https://twitter.com/${this.current.Ecrans_id.User_Twitter}" data-link-color="#E95F28" data-tweet-limit="1">Tweets by ${this.current.Ecrans_id.User_Twitter}</a> </div> 
            `;
             }
           }
