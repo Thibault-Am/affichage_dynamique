@@ -228,8 +228,8 @@ export default {
               `;
         }
         if (this.current.Ecrans_id.Image != null) {
-          this.compiled += `<div id='img' style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}' />
-                <img width='100%'src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
+          this.compiled += `<div  style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.compteur}/${this.current.Ecrans_id.Lignes_image}' />
+                <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
               </div>`;
           // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
         }
@@ -339,8 +339,9 @@ export default {
               `;
             }
             if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<div style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_image}' >
-                <img src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' width="100%" />
+              console.log(this.current.Ecrans_id.Image);
+              this.compiled += `<div  style=' grid-column: span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row:${this.compteur}/${this.current.Ecrans_id.Nombre_de_lignes_image}' >
+                <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />
               </div>`;
             }
             if (this.current.Ecrans_id.Markdown != null) {
@@ -434,6 +435,9 @@ export default {
 
 
 <style lang="scss">
+.imgG {
+  width: 100%;
+}
 .main {
   box-sizing: border-box;
   font-family: "Segoe print", Arial, Helvetica, sans-serif;
