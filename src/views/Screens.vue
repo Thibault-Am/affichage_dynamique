@@ -374,6 +374,7 @@ export default {
             }
 
             if (this.current.Ecrans_id.Choix_Horloge != null) {
+              this.timer = setInterval(this.setDateTime, 1000)
               this.compiled += `
               <div style='grid-column: ${this.current.Ecrans_id.Horloge_position}; grid-row: 1'><p id="horloge">{{ dateTime.hours }}:{{ dateTime.minutes }}:{{ dateTime.seconds }}</p></div></div>`;
             }
