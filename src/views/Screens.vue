@@ -37,6 +37,7 @@ export default {
       img_src: "",
       compteur: 1,
       indexTab: [],
+      markup: "",
     };
   },
   components: {
@@ -71,16 +72,16 @@ export default {
 
           const div = document.createElement("div");
           div.classList.add("city");
-          var markup;
+          
           if (this.current.Ecrans_id.Background_color != null) {
-            markup = ` <style> body {
+            this.markup = ` <style> body {
               background-color:${this.current.Ecrans_id.Background_color};
               } </style>`;
           } else {
-            markup = ``;
+            this.markup = ``;
           }
 
-          markup += `
+          this.markup += `
            <style>
 
                               .container {
@@ -134,8 +135,8 @@ export default {
                 </figure>
               `;
 
-          div.innerHTML = markup;
-          document.querySelector(".container").appendChild(div);
+          // div.innerHTML = markup;
+          // document.querySelector(".container").appendChild(div);
         })
         .catch(() => {
           alert("erreur la ville n'existe pas ");
@@ -207,7 +208,7 @@ export default {
           )}">
                                   <section class="ajax-section">
                                     <div class="container">
-                                      <div class="cities"></div>
+                                      <div class="cities" v-html="this.markup"></div>
                                     </div>
                                   </section>
                                                 
@@ -336,10 +337,10 @@ export default {
               }; grid-row: 1' onload="${this.meteo(
                 this.current.Ecrans_id.Ville,
                 "4d8fb5b93d4af21d66a2948710284366"
-              )}" >
-                                  <section class="ajax-section">
+              )}">
+                                  <section class="ajax-section"   >
                                     <div class="container">
-                                      <div class="cities"></div>
+                                      <div class="cities" v-html="this.markup"></div>
                                     </div>
                                   </section>
                                  </div>               
