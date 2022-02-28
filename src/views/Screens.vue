@@ -1,6 +1,12 @@
 <template>
   <div class="screens">
     <v-runtime-template :template="compiled"></v-runtime-template>
+    <timeless-clock
+      v-if="horloge"
+      :displaySeconds="false"
+      timezone="Europe/Paris"
+      time="moment"
+    />
     <div class="close">
       <div>
         <router-link to="/TokenSelect" class="btn">
@@ -19,15 +25,13 @@
 <script>
 import { marked } from "marked";
 import VRuntimeTemplate from "vue3-runtime-template";
-const date = new Date();
+import moment from "moment";
+import TimelessClock from "vuejs-timeless-clock";
+
+
 export default {
   data() {
     return {
-      dateTime: {
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds(),
-      },
       timer: undefined,
       content: [],
       current: [""],
@@ -38,10 +42,12 @@ export default {
       compteur: 1,
       indexTab: [],
       markup: "",
+      horloge: false,
     };
   },
   components: {
     VRuntimeTemplate,
+    TimelessClock,
   },
   mounted() {
     let recaptchaScript = document.createElement("script");
@@ -52,13 +58,8 @@ export default {
     document.head.appendChild(recaptchaScript);
   },
   methods: {
-    setDateTime() {
-      const date = new Date();
-      this.dateTime = {
-        hours: date.getHours(),
-        minutes: date.getMinutes(),
-        seconds: date.getSeconds(),
-      };
+    getMomentTime() {
+      return moment();
     },
 
     meteo(inputVal, apiKey) {
@@ -249,7 +250,9 @@ export default {
                                     </video>
                                   </div>
                                   `;
-        }
+        }if (this.current.Ecrans_id.Choix_Horloge != null) {
+              this.horloge = true;
+            }
       } else {
         if (this.current.Ecrans_id.Type == "image") {
           this.compiled += `<img id='imgFull' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />`;
@@ -374,9 +377,7 @@ export default {
             }
 
             if (this.current.Ecrans_id.Choix_Horloge != null) {
-              this.timer = setInterval(this.setDateTime, 1000)
-              this.compiled += `
-              <div style='grid-column: ${this.current.Ecrans_id.Horloge_position}; grid-row: 1'><p id="horloge">{{ dateTime.hours }}:{{ dateTime.minutes }}:{{ dateTime.seconds }}</p></div></div>`;
+              this.horloge = true;
             }
           } else {
             /*-------  Cas d'un contentu Image   --------*/
@@ -438,13 +439,13 @@ export default {
     },
   },
 
-  beforeUnmount() {
+   beforeUnmount() {
     clearInterval(this.timer);
   },
   created() {
     this.loadApi();
     this.login();
-    console.log("avant");
+   // console.log("avant");
 
     // var_dump(this.indexTab);
     // console.log("apres");
@@ -456,6 +457,15 @@ export default {
 <style lang="scss">
 video {
   width: 100%;
+}
+.timeless-clock {
+  position: fixed;
+  z-index: 3;
+  top: 1em;
+  right: 1em;
+  span {
+    font-size: 3em;
+  }
 }
 .widget_twitter_h1 {
   grid-column: 3/5;
