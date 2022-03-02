@@ -231,8 +231,8 @@ export default {
               `;
         }
         if (this.current.Ecrans_id.Image != null) {
-          this.compiled += `<div  style=' grid-column: ${this.current.Ecrans_id.Colonnes_image_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_images_depart}/ span ${this.current.Ecrans_id.Lignes_image}'>
-                <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}'/>
+          this.compiled += `<div  style='grid-column: ${this.current.Ecrans_id.Colonnes_image_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_images_depart}/ span ${this.current.Ecrans_id.Lignes_image}'>
+                <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />
               </div>`;
           // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
         }
@@ -262,10 +262,13 @@ export default {
           this.compiled += "</section>";
         } else if (this.current.Ecrans_id.Type == "video") {
           this.compiled += `
-                                    <video controls width="500" autoplay='true'>
-                                      <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
-                                      Sorry, your browser doesn't support embedded videos.
-                                  </video>`;
+                                
+
+                                      <video  style='width:100%' autoplay='true'>
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}'>
+                                        Sorry, your browser doesn't support embedded videos.
+                                    </video>
+                                  `;
         } else if (this.current.Ecrans_id.videoYoutube != null) {
           this.compiled += `
                 <div class="youtube">
@@ -321,13 +324,14 @@ export default {
           this.Next = 2;
           this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
           /*-------  Cas d'un contentu Multimédia   --------*/
-          this.compiled += `<div class='grille'>`;
+          
           if (this.current.Ecrans_id.Type == "multimedia") {
+            this.compiled += `<div class='grille'>`;
             if (this.current.Ecrans_id.Video != null) {
               console.log(this.current.Ecrans_id.Video);
               this.compiled += `  <div style='grid-column: ${this.current.Ecrans_id.Colonnes_video_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_video}; grid-row:${this.current.Ecrans_id.Lignes_video_depart}/ span ${this.current.Ecrans_id.Lignes_video}'>
 
-                                      <video controls width="100%" autoplay='true'>
+                                      <video style='width:100%' autoplay='true'>
                                         <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}'>
                                         Sorry, your browser doesn't support embedded videos.
                                     </video>
@@ -392,10 +396,13 @@ export default {
             }
             /*-------  Cas d'un contentu Video   --------*/
             if (this.current.Ecrans_id.Type == "video") {
-              this.compiled += `<video controls width="500" autoplay='true'>
-                                <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}>
-                                Sorry, your browser doesn't support embedded videos.
-                              </video>`;
+              this.compiled += `
+
+                                      <video  style='width:100%' autoplay='true'>
+                                        <source src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Video}'>
+                                        Sorry, your browser doesn't support embedded videos.
+                                    </video>
+                                  `;
             }
             /* ------ Cas d'un contenu video youtube -------*/
 
@@ -415,7 +422,7 @@ export default {
               `;
             }
             if (this.current.Ecrans_id.User_Twitter != null) {
-              console.log(this.current.Ecrans_id.User_Twitter);
+              //console.log(this.current.Ecrans_id.User_Twitter);
               let widgets = document.createElement("script");
               widgets.setAttribute("charset", "UTF-8");
               widgets.setAttribute(
@@ -431,9 +438,22 @@ export default {
           }
 
           this.compiled += "</div>";
+         
+           if (this.Next > this.content.length) {
+        if (this.Boucle == true) {
           setTimeout(() => {
-            this.nextSlide(this.Next);
+            this.firstSlide();
           }, this.current.Duree * 1000);
+        } else {
+          setTimeout(() => {
+            this.end();
+          }, this.current.Duree * 1000);
+        }
+      } else {
+        setTimeout(() => {
+          this.nextSlide(this.Next);
+        }, this.current.Duree * 1000);
+      }
         }
       });
     },
@@ -455,9 +475,7 @@ export default {
 
 
 <style lang="scss">
-video {
-  width: 100%;
-}
+
 .timeless-clock {
   position: fixed;
   z-index: 3;
@@ -472,7 +490,11 @@ video {
   grid-row: 1;
   text-align: center;
 }
+body{
+ overflow: hidden;
+}
 .widget_twitter {
+  
   grid-column: 3/5;
   grid-row: 2;
   text-align: center;
