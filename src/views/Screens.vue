@@ -28,7 +28,6 @@ import VRuntimeTemplate from "vue3-runtime-template";
 import moment from "moment";
 import TimelessClock from "vuejs-timeless-clock";
 
-
 export default {
   data() {
     return {
@@ -73,7 +72,7 @@ export default {
 
           const div = document.createElement("div");
           div.classList.add("city");
-          
+
           if (this.current.Ecrans_id.Background_color != null) {
             this.markup = ` <style> body {
               background-color:${this.current.Ecrans_id.Background_color};
@@ -231,7 +230,7 @@ export default {
               `;
         }
         if (this.current.Ecrans_id.Image != null) {
-          this.compiled += `<div  style='grid-column: ${this.current.Ecrans_id.Colonnes_image_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_images_depart}/ span ${this.current.Ecrans_id.Lignes_image}'>
+          this.compiled += `<div  style='grid-column: ${this.current.Ecrans_id.Colonnes_image_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_image_depart}/ span ${this.current.Ecrans_id.Lignes_image}'>
                 <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />
               </div>`;
           // this.compiled = `<img src='http://149.91.80.75:8055/assets/${this.current.Ecrans_id.Image}' />`;
@@ -250,9 +249,10 @@ export default {
                                     </video>
                                   </div>
                                   `;
-        }if (this.current.Ecrans_id.Choix_Horloge != null) {
-              this.horloge = true;
-            }
+        }
+        if (this.current.Ecrans_id.Choix_Horloge != null) {
+          this.horloge = true;
+        }
       } else {
         if (this.current.Ecrans_id.Type == "image") {
           this.compiled += `<img id='imgFull' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />`;
@@ -292,7 +292,7 @@ export default {
           );
 
           document.head.appendChild(widgets);
-          this.compiled += `<h1 class="widget_twitter_h1">Tweets by ${this.current.Ecrans_id.User_Twitter}</h1>
+          this.compiled += `<h1 class="widget_twitter_h1">Last Tweet by ${this.current.Ecrans_id.User_Twitter}</h1>
               <div class="widget_twitter"> <a class="twitter-timeline" data-width="550" data-height="450" data-theme="light" href="https://twitter.com/${this.current.Ecrans_id.User_Twitter}" data-link-color="#E95F28" data-tweet-limit="1">Tweets by ${this.current.Ecrans_id.User_Twitter}</a> </div> 
            `;
         }
@@ -324,7 +324,7 @@ export default {
           this.Next = 2;
           this.compiled = `<div class="main" style='width:100vw;height:100vh;background-color:${this.current.Ecrans_id.BackgroundColor};color:${this.current.Ecrans_id.FontColor}'>`;
           /*-------  Cas d'un contentu Multimédia   --------*/
-          
+
           if (this.current.Ecrans_id.Type == "multimedia") {
             this.compiled += `<div class='grille'>`;
             if (this.current.Ecrans_id.Video != null) {
@@ -369,7 +369,8 @@ export default {
               `;
             }
             if (this.current.Ecrans_id.Image != null) {
-              this.compiled += `<div  style='grid-column: ${this.current.Ecrans_id.Colonnes_image_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_images_depart}/ span ${this.current.Ecrans_id.Lignes_image}' >
+              //console.log(this.current.Ecrans_id.Lignes_images_depart);
+              this.compiled += `<div  style='grid-column: ${this.current.Ecrans_id.Colonnes_image_depart} / span ${this.current.Ecrans_id.Nombre_de_colonnes_image}; grid-row: ${this.current.Ecrans_id.Lignes_image_depart}/ span ${this.current.Ecrans_id.Lignes_image}' >
                 <img class='imgG' src='https://api.interdisp.valentinbardet.dev/assets/${this.current.Ecrans_id.Image}' />
               </div>`;
             }
@@ -431,41 +432,41 @@ export default {
               );
 
               document.head.appendChild(widgets);
-              this.compiled += `<h1 class="widget_twitter_h1">Tweets by ${this.current.Ecrans_id.User_Twitter}</h1>
+              this.compiled += `<h1 class="widget_twitter_h1">Last Tweet by ${this.current.Ecrans_id.User_Twitter}</h1>
               <div class="widget_twitter"> <a class="twitter-timeline" data-width="550" data-height="450" data-theme="light" href="https://twitter.com/${this.current.Ecrans_id.User_Twitter}" data-link-color="#E95F28" data-tweet-limit="1">Tweets by ${this.current.Ecrans_id.User_Twitter}</a> </div> 
            `;
             }
           }
 
           this.compiled += "</div>";
-         
-           if (this.Next > this.content.length) {
-        if (this.Boucle == true) {
-          setTimeout(() => {
-            this.firstSlide();
-          }, this.current.Duree * 1000);
-        } else {
-          setTimeout(() => {
-            this.end();
-          }, this.current.Duree * 1000);
-        }
-      } else {
-        setTimeout(() => {
-          this.nextSlide(this.Next);
-        }, this.current.Duree * 1000);
-      }
+
+          if (this.Next > this.content.length) {
+            if (this.Boucle == true) {
+              setTimeout(() => {
+                this.firstSlide();
+              }, this.current.Duree * 1000);
+            } else {
+              setTimeout(() => {
+                this.end();
+              }, this.current.Duree * 1000);
+            }
+          } else {
+            setTimeout(() => {
+              this.nextSlide(this.Next);
+            }, this.current.Duree * 1000);
+          }
         }
       });
     },
   },
 
-   beforeUnmount() {
+  beforeUnmount() {
     clearInterval(this.timer);
   },
   created() {
     this.loadApi();
     this.login();
-   // console.log("avant");
+    // console.log("avant");
 
     // var_dump(this.indexTab);
     // console.log("apres");
@@ -475,7 +476,6 @@ export default {
 
 
 <style lang="scss">
-
 .timeless-clock {
   position: fixed;
   z-index: 3;
@@ -490,11 +490,10 @@ export default {
   grid-row: 1;
   text-align: center;
 }
-body{
- overflow: hidden;
+body {
+  overflow: hidden;
 }
 .widget_twitter {
-  
   grid-column: 3/5;
   grid-row: 2;
   text-align: center;
