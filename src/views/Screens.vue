@@ -216,7 +216,7 @@ export default {
         }
         if (this.current.Ecrans_id.videoYoutube != null) {
           this.compiled += `
-                <div style=' grid-column: ${this.current.Ecrans_id.Colonnes_videoYoutube_depart}/${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.current.Ecrans_id.Lignes_videoYoutube_depart}/${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
+                <div style=' grid-column: ${this.current.Ecrans_id.Colonnes_videoYoutube_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.current.Ecrans_id.Lignes_videoYoutube_depart}/ span ${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
                   <iframe
                     width="560"
                     height="315"
@@ -355,7 +355,7 @@ export default {
             }
             if (this.current.Ecrans_id.videoYoutube != null) {
               this.compiled += `
-                <div style=' grid-column: ${this.current.Ecrans_id.Colonnes_videoYoutube_depart}/${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.current.Ecrans_id.Lignes_videoYoutube_depart}/${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
+                <div style=' grid-column: ${this.current.Ecrans_id.Colonnes_videoYoutube_depart}/ span ${this.current.Ecrans_id.Nombre_de_colonnes_videoYoutube}; grid-row:${this.current.Ecrans_id.Lignes_videoYoutube_depart}/ span ${this.current.Ecrans_id.Lignes_videoYoutube}'  class="youtube">
                   <iframe
                     width="560"
                     height="315"
